@@ -26,7 +26,7 @@ app.set('view engine', 'hbs');
 app.engine('hbs',hbs.engine({extname:'hbs',defaultLayout:'layout',layoutsDir:__dirname+'/views/layouts/',partialsDir:__dirname+'/views/partials/'}))
 
 app.use(fileUpload())
-app.use(session({secret:"hashKey" ,cookie:{max:6000000}}))
+app.use(session({secret:"hashKey" ,cookie:{max:60000000}}))
 
 app.use(logger('dev'));
 app.use(express.json());
