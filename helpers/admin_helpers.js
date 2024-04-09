@@ -180,9 +180,26 @@ updateProductFile : (id, file)=>{
             reject({msg: "error while updating"})
         }
     })
-} 
+} ,
 
+getMyProfile: (id)=>{
+    return new Promise((resolve,reject)=>{
+        try{
+            db.get().collection(collection.ADMIN_DETAILS).aggregate([{
+                 $match:{
+                    _id: new ObjectId(id)
+                },
+            }
+               
+            ]).toArray().then(response=>{
+                resolve(response)
+            })
+        }catch(err){
+            reject({message: "Internal Server error"})
 
+        }
+    })
+}
 
 
 }

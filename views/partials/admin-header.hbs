@@ -1,4 +1,82 @@
 <header>
+    <style>
+        .sub-menu-wrap{
+            position: absolute;
+            top: 100%;
+            right: 4%;
+            width: 320px;
+            border-radius: 50px;
+            max-height: 0px;
+            overflow: hidden;
+            transition: max-height 0.5s;
+        }
+        .sub-menu-wrap.open-menu{
+            max-height: 400px;
+        }
+        .sub-menu{
+            background: #d9dada;
+            padding: 20px;
+            margin: 10px;
+
+        }
+        .image img{
+            border-radius: 50%;
+            right: 4%;
+        }
+        .user-info{
+            display: flex;
+            align-items: center;
+
+        }
+        .user-info h5{
+            font-weight: bold;
+
+        }
+        .user-info img{
+            margin-right: 15px;
+        }
+        .hr{
+            border: 0;
+            height: 10px;
+            width: 100%;
+            margin: 15px 0 10px;
+            color: rgb(1, 12, 12);
+            
+        }
+        .link-image img{
+           
+            padding: 0px;
+            margin-right: 15px;
+            
+        }
+        .sub-menu-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: black;
+            margin: 15px 8px;
+            padding-top: 5px;
+        }
+        .sub-menu-link p{
+            width: 100%;
+           
+        }
+        .sub-menu-link span{
+            font-size: 22px;
+            transition: transform 0.5s;
+        }
+        .sub-menu-link:hover span{
+            transform: translateX(5px);
+            
+        }
+         .sub-menu-link:hover p{
+            font-weight: bold;
+            color: rgb(40, 40, 40);
+         }
+
+
+       
+    </style>
         <div class="row">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
@@ -26,7 +104,76 @@
                     <a class="nav-link active" href="#" aria-current="page" >Profile</a>
                     </li>
                 </ul>
-                 <div class="dropdown">
+                <div class="image">
+                    {{#if status}}
+                    <img onclick="toggleMenu()" id="user-pic"style="border: radius 50px;" src="https://imgs.search.brave.com/jTC1M7a_RYoLyZCEj4Tk5Wi9bQAaa2I1MdIW-pp4nlU/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMtZ2xvYmFsLndl/YnNpdGUtZmlsZXMu/Y29tLzVlYzdkYWQy/ZTZmNjI5NWE5ZTJh/MjNkZC81ZWRmYTdj/NjYwNGM3N2IxYjRi/ZDY1OGFfcHJvZmls/ZXBob3RvNS5qcGVn" height="50px" width="50px">
+                     {{else}}
+                    <img id="user-pic"style="border: radius 50px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFwAAABcCAMAAADUMSJqAAAAYFBMVEX///8AAACioqLc3NyOjo7h4eH6+vpwcHC7u7vz8/PQ0NDl5eXW1tY7OzuLi4tmZmYvLy9AQEAbGxsTExMgICDBwcGysrJbW1tNTU3Kyso0NDSqqqpGRkZTU1N9fX2cnJyBmEz5AAACcElEQVRoge2Y2ZajIBCG+3dDNC5xjUlH3v8tG8dkTieKVArPXMzxu4uB/0BR1MLX18HBwcF/S5S2N8+7tWG0t3J66/GX3kt3lA6FlvwOusT3hy646B+Fv5O0HPVi41/GiFq9DSH30B70ok/vH/070LprK6Bb+94Cuav2iNJwejLD6Kad42L+s3dT73De+vsCj6+dot70iagB3yXvSLYH+Ns72yK22zRYdyUCDexhBOBpDxRHVohZ4gUI8Ulu+arztB6cIJPQnLhjxRhl88MZnxViBMFXJlAwxO9EJ0PGEM9q2rgrcdwLZUMbd+ZcI+qka8UQ76k2/2aIj8TbAcEQ9zBQhp2gGOInBDuu4Y2oIiWCCyu2aKMTcljKuqCTXQhHlbOsovm2B3SJkqetg651y4Jf1Alb+m2ZFp+IsG0YCZ6rzJw2Z8uGe5ozHRrj2uUVNxftSd2U7fSuHCrFGVMdHoBZsbxwalAuOovwjIqUv01EiSrKRwOXvyZr9fhcFirhdI6JqPXsqh+Difwlrt7yPx/HvtJDavHpFmK95LMizErUWW/gE+sPmTZESB0d5kBGdfhILGxsm6HlBWlG2OD+cfud3tEQttoy74ZH6Hpj4420kVhvVYuafJDvhPX22n1LjN0mxVbWjWquTWYS1GafKdiN34POnJla9G7aU4FpMrtT0pqRpr7Ucw/+RpGoqXZ4d4uqZk0lZpWrC9Zb6guxe7Ow2htLh/rmhWLFLWJXH3/SrdhFuFz836QrxXHGLVcXlIuuV7rfzifLd4zQ/QnySY73qO0jCP1dCINF4B2wI++lQKq83VB7Pq8fHBwc/FN+ADxUFeeEnPwJAAAAAElFTkSuQmCC" height="50px" width="50px">
+                    {{/if}}
+                </div>
+                <div class="sub-menu-wrap" id="subMenu">
+                    <div class="sub-menu">
+                        <div class="user-info">
+                         <div class="image">
+                            {{#if status}}
+                            <img id="user-pic"style="border: radius 50px;" src="https://imgs.search.brave.com/jTC1M7a_RYoLyZCEj4Tk5Wi9bQAaa2I1MdIW-pp4nlU/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMtZ2xvYmFsLndl/YnNpdGUtZmlsZXMu/Y29tLzVlYzdkYWQy/ZTZmNjI5NWE5ZTJh/MjNkZC81ZWRmYTdj/NjYwNGM3N2IxYjRi/ZDY1OGFfcHJvZmls/ZXBob3RvNS5qcGVn" height="50px" width="50px">
+                            {{else}}
+                             <img id="user-pic"style="border: radius 50px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFwAAABcCAMAAADUMSJqAAAAYFBMVEX///8AAACioqLc3NyOjo7h4eH6+vpwcHC7u7vz8/PQ0NDl5eXW1tY7OzuLi4tmZmYvLy9AQEAbGxsTExMgICDBwcGysrJbW1tNTU3Kyso0NDSqqqpGRkZTU1N9fX2cnJyBmEz5AAACcElEQVRoge2Y2ZajIBCG+3dDNC5xjUlH3v8tG8dkTieKVArPXMzxu4uB/0BR1MLX18HBwcF/S5S2N8+7tWG0t3J66/GX3kt3lA6FlvwOusT3hy646B+Fv5O0HPVi41/GiFq9DSH30B70ok/vH/070LprK6Bb+94Cuav2iNJwejLD6Kad42L+s3dT73De+vsCj6+dot70iagB3yXvSLYH+Ns72yK22zRYdyUCDexhBOBpDxRHVohZ4gUI8Ulu+arztB6cIJPQnLhjxRhl88MZnxViBMFXJlAwxO9EJ0PGEM9q2rgrcdwLZUMbd+ZcI+qka8UQ76k2/2aIj8TbAcEQ9zBQhp2gGOInBDuu4Y2oIiWCCyu2aKMTcljKuqCTXQhHlbOsovm2B3SJkqetg651y4Jf1Alb+m2ZFp+IsG0YCZ6rzJw2Z8uGe5ozHRrj2uUVNxftSd2U7fSuHCrFGVMdHoBZsbxwalAuOovwjIqUv01EiSrKRwOXvyZr9fhcFirhdI6JqPXsqh+Difwlrt7yPx/HvtJDavHpFmK95LMizErUWW/gE+sPmTZESB0d5kBGdfhILGxsm6HlBWlG2OD+cfud3tEQttoy74ZH6Hpj4420kVhvVYuafJDvhPX22n1LjN0mxVbWjWquTWYS1GafKdiN34POnJla9G7aU4FpMrtT0pqRpr7Ucw/+RpGoqXZ4d4uqZk0lZpWrC9Zb6guxe7Ow2htLh/rmhWLFLWJXH3/SrdhFuFz836QrxXHGLVcXlIuuV7rfzifLd4zQ/QnySY73qO0jCP1dCINF4B2wI++lQKq83VB7Pq8fHBwc/FN+ADxUFeeEnPwJAAAAAElFTkSuQmCC" height="50px" width="50px">
+                           {{/if}}
+                         </div>
+                             {{#if status}}
+                            <h5>{{admin_data.firstName}} {{admin_data.lastName}}</h5> 
+                            
+                            {{else}}
+                            <h3>Accounts</h3>
+                            {{/if}}
+                            {{!-- <span>&#10146;</span> --}}
+                        </div>
+                        <hr class="hr">
+
+                         {{#if status}}
+                                 <a class="sub-menu-link" href="/admin/logout">
+                                 <div class="link-image">
+                                    <img src="https://cdn-icons-png.flaticon.com/128/1828/1828479.png" height="20px" width="20px">
+                                 </div>
+                                 <p>Logout</p>
+                                 <span> > </span>
+                                 </a>
+
+
+                                 <a class="sub-menu-link" href="#">
+                                 <div class="link-image">
+                                    <img src="https://cdn-icons-png.flaticon.com/128/8188/8188360.png" height="20px" width="20px">
+                                 </div>
+                                 <p>Edit Profile</p>
+                                 <span> > </span>
+                                 </a>
+
+                                 <a class="sub-menu-link" href="#">
+                                 <div class="link-image">
+                                    <img src="https://cdn-icons-png.flaticon.com/128/64/64722.png" height="20px" width="20px">
+                                 </div>
+                                 <p>Settings</p>
+                                 <span> > </span>
+                                 </a>
+
+                                 <a class="sub-menu-link" href="#">
+                                 <div class="link-image">
+                                    <img src="https://cdn-icons-png.flaticon.com/128/3166/3166003.png" height="20px" width="20px">
+                                 </div>
+                                 <p>Help & support</p>
+                                 <span> > </span>
+                                 </a>
+
+                                {{else}}
+                                <a class="dropdown-item" href="/admin/login">Login</a>
+                                <a class="dropdown-item" href="/admin/signup">Sign-up</a>
+                                {{/if}}
+                    </div>
+
+
+                </div>
+                        {{!-- <div class="dropdown">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {{#if status}}
                                 {{admin_data.firstName}}
@@ -42,11 +189,17 @@
                                 <a class="dropdown-item" href="/admin/signup">Sign-up</a>
                                 {{/if}}
                             </div>
-                            </div>
+                            </div> --}}
                           
                 </div>
             </div>
             </nav>
         </div>
+        <script>
+            let subMenu = document.getElementById("subMenu")
+            function toggleMenu(){
+                subMenu.classList.toggle("open-menu")
+            }
+        </script>
     </header>
     

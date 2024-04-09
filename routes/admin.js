@@ -84,6 +84,15 @@ router.get('/logout',(req,res)=>{
 })
 
 
+router.get('/getMyProfile',verifyLogin,(req,res)=>{
+  let status =  req.session.loggedInByAdmin;
+  let admin_data  = req.session.admin;
+  Admin_Helpers.getMyProfile(admin_data._id).then(response=>{
+    res.render('admin/profile',{profile:response,status,admin:true})
+  })
+})
+
+
 
 
 
