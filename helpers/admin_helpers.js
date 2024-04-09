@@ -99,8 +99,8 @@ deleteProductData : (id)=>{
 deleteProductFile : (id)=>{
     return new Promise((resolve,reject)=>{
         try{
-            
-            fs.unlink('./shoppingCart/../public/product-images/'+id+'.jpg',(err)=>{
+            console.log(id);
+            fs.unlink('./public/product-images/'+id+'.jpg',(err)=>{
                 console.log(err);
                 if(!err){
                     resolve({status:"ok"})
@@ -141,21 +141,25 @@ getProductDetails : (id)=>{
 updateProductData : (id,name,price,category,description)=>{
     return new Promise((resolve,reject)=>{
         try{
+            console.log("hiiiiii");
             db.get().collection(collection.PRODUCT_COLLECTION).updateOne({_id : ObjectId(id)},
             {
+                
                 $set:{name : name,
                     price : price,
                     category : category,
                     description : description,
                     }
             }).then(response=>{
+                console.log("hi");
                 resolve({status:"ok"})
             }).catch(err=>{
-                reject({msg: "error while updating"})
+                reject({msg: "error "})
             })
 
         }catch(err){
-            reject({msg: "error while updating"})
+            console.log(err);
+            reject({msg: "error while "})
 
         }
     })

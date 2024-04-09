@@ -20,7 +20,8 @@ router.get('/', function(req, res, next) {
   let status =  req.session.loggedInByAdmin;
   let admin_data  = req.session.admin;
   if(status){
-      productHelpers.getAllProducts().then((Products)=>{
+    //console.log(admin_data._id);
+      productHelpers.getAllProducts(admin_data._id).then((Products)=>{
       console.log(Products);
       res.render('admin/view-products',{admin:true,Products,status,admin_data})
      })
@@ -42,27 +43,36 @@ router.get('/signup',(req,res)=>{
   res.render('admin/signup',{admin:true})
 })
 
-router.get('/add-products',(req,res)=>{
-    res.render('admin/add-products',{admin:true})
+router.get('/add-products',verifyLogin,(req,res)=>{
+  let status =  req.session.loggedInByAdmin;
+  let admin_data  = req.session.admin;
+    res.render('admin/add-products',{admin:true,status,admin_data})
 })
 
-router.get('/delete-product/:key',(req,res)=>{
+router.get('/delete-product/:key',verifyLogin,(req,res)=>{
   const id = req.params.key
-  Promise.all([Admin_Helpers.deleteProductData(id),Admin_Helpers.deleteProductFile(id)]).then(response=>{
+  Promise.all([Admin_Helpers.deleteProductFile(id),Admin_Helpers.deleteProductData(id)]).then(response=>{
     if(response[0].status === "ok" && response[1].status === "ok"){
       res.redirect('/admin')
-      console.log("success deletion");
-    }
-  }).catch(err=>{
+      // productHelpers.getAllProducts().then((Products)=>{
+      //   console.log(Products);
+        
+      // console.log("success deletion");
+    // })
+  }
+}
+  ).catch(err=>{
     res.send(err.msg)
   })
 })
 
 
-router.get('/edit-product/:key',(req,res)=>{
+router.get('/edit-product/:key',verifyLogin,(req,res)=>{
+  let status =  req.session.loggedInByAdmin;
+  let admin_data  = req.session.admin;
   let id = req.params.key;
   Admin_Helpers.getProductDetails(id).then(response=>{
-    res.render('admin/edit-product',{product:response,admin:true})
+    res.render('admin/edit-product',{product:response,admin:true,status,admin_data})
   }).catch(err=>{
     res.send(err.msg)
   })
@@ -83,18 +93,21 @@ router.get('/logout',(req,res)=>{
 
            //            POST METHODS
 
-router.post('/add-products',(req,res)=>{
+router.post('/add-products',verifyLogin,(req,res)=>{
+  let admin_data  = req.session.admin;
+  const adminId = admin_data._id
   console.log(req.body)
   console.log(req.files.Image)
-  productHelpers.addProduct(req.body,(id)=>{
+  productHelpers.addProduct(req.body,adminId,(id)=>{
   console.log(id);
     var image=req.files.Image
     image.mv('./public/product-images/'+id+'.jpg',(err,done)=>{
       if(!err){
-        productHelpers.getAllProducts().then((Products)=>{
-          console.log(Products);
-          res.render('admin/view-products',{admin:true,Products})
-      })
+      //   productHelpers.getAllProducts().then((Products)=>{
+      //     console.log(Products);
+      //     res.render('admin/view-products',{admin:true,Products})
+      // })
+      res.redirect('/admin')
       }
       else{
         console.log(err);
@@ -163,7 +176,7 @@ router.post('/edit-product/:key',(req,res)=>{
     
   }else{
     Promise.all(
-      [Admin_Helpers.updateProductData(name, price, category, description),
+      [Admin_Helpers.updateProductData(id, name, price, category, description),
       Admin_Helpers.updateProductFile(id,req.files.Image)]).then(response=>{
         if(response[0].status === "ok" && response[1].status === "ok"){
           res.redirect('/admin')

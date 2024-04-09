@@ -166,6 +166,15 @@ module.exports={
                         foreignField:"_id",
                         as: "product"
                     }  
+                },{
+                    $addFields: {
+                        'product.quantity': '$quantity' // Add quantity field from cart to product array
+                    }
+                },
+                {
+                    $project: {
+                        quantity: 0 // Exclude quantity field added from cart in the final output
+                    }
                 }
                 
                 // {
@@ -188,7 +197,7 @@ module.exports={
                 // }
               ]).toArray()
               resolve(cartItems)
-              //console.log(cartItems);
+              console.log(cartItems);
         })
     },
 
@@ -209,5 +218,38 @@ module.exports={
             
 
         })
-    }
+    },
+
+    removeCartElement : (id,userId)=>{
+        console.log(id,userId);
+        return new Promise(async(resolve,reject)=>{
+            try{
+                await db.get().collection(collection.CART_COLLECTION).updateOne(
+                    {
+                        userId:new ObjectId(userId),
+
+                    }, 
+                    { 
+                        $pull: { cart: { item: new ObjectId(id) } }
+                     }
+                    ).then(response=>{
+                    if(response){
+
+                        console.log(response);
+                        resolve({status:"ok"})
+                        console.log("success");
+                    }
+                    else{
+                        reject({msg:"error while deleting"})
+                    }
+                })
+    
+            }catch(err){
+                console.log(err);
+                reject({msg:"error while deleting"})
+            }
+    
+        })
+    },
+    
 }

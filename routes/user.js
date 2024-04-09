@@ -24,21 +24,29 @@ const verifyLogin =(req,res,next)=>{
             //GET METHODS   
 
 router.get('/', async function(req, res, next) {
-   var user =  req.session.user;
-   var  status = req.session.loggedIn;
-   console.log(status);
-   if(status){
-      var cartcount = await User_Helpers.cartCount(user._id)
-   }
-     Product_Helpers.getAllProducts().then((Products)=>{
-    res.render('../views/user/view-products.hbs',{Products,user,status,cartcount});
-   })
-   
- 
+   try{
+      var user = req.session.user;
+      var status = req.session.loggedIn;
+      console.log("test");
+      console.log(status);
+      console.log(user);
+      var cartcount = 0;
+      if(user){
+               cartcount = await User_Helpers.cartCount(user._id);
 
+      }
+      const Products = await Product_Helpers.getAllProductsForUser();
+      res.render('../views/user/view-products', { Products, user, status ,cartcount});
+      }
+      catch(err){
+         console.log(err);
+      }
+   
 });
 
+
 router.get('/user/login', (req,res)=>{
+   console.log("hello");
    let status =  req.session.loggedIn;
    if(status){
       res.redirect('/')
@@ -57,13 +65,13 @@ router.get('/user/logout',(req,res)=>{
    res.redirect('/user/login')
 })
 
-router.get('/user/cart/:id',verifyLogin,async(req,res,)=>{
-   const userId = req.params.id;
+router.get('/user/cart',verifyLogin,async(req,res,)=>{
+  // const userId = req.params.id;
 
    let status = req.session.loggedIn;
    let user = req.session.user;
-   let cartcount = await User_Helpers.cartCount(userId)
-   await User_Helpers.list_Cart(userId).then(result=>{
+   let cartcount = await User_Helpers.cartCount(user._id)
+   await User_Helpers.list_Cart(user._id).then(result=>{
       let cart  =  result
        console.log(cart);
       res.render('../views/user/cart.hbs',{cart,user,status,cartcount});
@@ -71,7 +79,6 @@ router.get('/user/cart/:id',verifyLogin,async(req,res,)=>{
   
    
 })
-
 router.get('/user/addtocart/:id',(req,res)=>{
    console.log("api call");
    const product_id=req.params.id;
@@ -97,25 +104,14 @@ router.get('/user/addtocart/:id',(req,res)=>{
    })
 })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+router.get('/removeCart/:key',verifyLogin,(req,res)=>{
+   var user = req.session.user;
+   var status = req.session.loggedIn;
+   const id = req.params.key
+  User_Helpers.removeCartElement(id,user._id).then(response=>{
+   res.redirect('/user/cart')
+  });
+})
 
 //POST METHODS
 
@@ -128,6 +124,7 @@ router.post('/user/signup',async(req,res)=>{
 
    User_Helpers.doSignup(firstName,lastName,email,password).then(response=>{
       if(response.status === "ok"){
+         console.log("hiiiii guddd");
          req.session.loggedIn = true
          req.session.user = response.user
          res.redirect('/')
@@ -144,12 +141,12 @@ router.post('/user/login',async(req,res)=>{
    const password = req.body.password;
    User_Helpers.doLogin(email,password).then( result=>{
       if(result.status === "ok"){
+         console.log("okk");
          req.session.loggedIn = true;
          req.session.user = result.user;
          console.log(req.session.loggedIn);
         // console.log(req.session.loggedIn);
-         console.log("succesfully logged in" )
-         console.log("hoiii");
+        
          res.redirect('/')
       }
    }).catch(err=>{

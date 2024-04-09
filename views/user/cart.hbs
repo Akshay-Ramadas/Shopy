@@ -40,18 +40,18 @@
       <td>{{this.name}}</td>
       <td>{{this.price}}</td>
       <td></td>
-      {{/each}}
+    
       <td>
         <button class="btn btn-primary">-</button> {{this.quantity}} <button class="btn btn-primary">+</button>
       </td>
       <td>
          
         <a href="" class="btn btn-primary  " ><b>Buy Now</b></a>
-        <a href="" class="btn btn-danger" onclick="return confirm('Are you sure to delete {{this.name}}?');"><b>Remove</b></a>
+        <a href="/removeCart/{{this._id}}" class="btn btn-danger" onclick="return confirm('Are you sure to delete {{this.name}}?');"><b>Remove</b></a>
         
      
       </td>
-     
+       {{/each}}
     </tr>
     
     {{/each}}
